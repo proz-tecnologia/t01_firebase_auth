@@ -4,7 +4,7 @@ import 'sign_in_repository.dart';
 import 'sign_in_state.dart';
 
 class SignInController {
-  final Repository _repository;
+  final AuthRepository _repository;
   SignInController(this._repository);
   final notifier = ValueNotifier<SignInState>(InitialSignInState());
   SignInState get state => notifier.value;
@@ -15,7 +15,7 @@ class SignInController {
       await Future.delayed(const Duration(seconds: 2));
       await _repository.login(email, password);
       notifier.value = SuccessSignInState();
-    } catch (e, stackTrace) {
+    } catch (e) {
       notifier.value = ErrorSignInState();
     }
   }
@@ -26,7 +26,7 @@ class SignInController {
       await Future.delayed(const Duration(seconds: 2));
       await _repository.register(email, password);
       notifier.value = SuccessSignInState();
-    } catch (e, stackTrace) {
+    } catch (e) {
       notifier.value = ErrorSignInState();
     }
   }

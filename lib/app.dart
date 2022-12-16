@@ -3,6 +3,8 @@ import 'package:t01_firebase_auth/features/home/home_page.dart';
 import 'package:t01_firebase_auth/features/sign_in/sign_in_page.dart';
 import 'package:t01_firebase_auth/features/splash/splash.dart';
 
+import 'features/todo/add_todo_page.dart';
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -14,6 +16,7 @@ class MyApp extends StatelessWidget {
       home: const SplashPage(),
       routes: {
         '/home': (_) => const MyHomePage(title: 'Kaio legal'),
+        '/add-todo': (_) => const AddTodoPage(),
         '/signin': (_) => const SignInPage(),
       },
     );

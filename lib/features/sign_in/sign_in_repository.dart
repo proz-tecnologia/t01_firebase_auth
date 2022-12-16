@@ -1,13 +1,28 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:t01_firebase_auth/shared/user_model.dart';
 
-abstract class Repository {
+abstract class AuthRepository {
   Future<UserModel> login(String email, String password);
   Future<UserModel> register(String email, String password);
+  Future<void> signOut();
+  bool get isLogged;
+  User? get currentUser;
 }
 
-class FirebaseRepository implements Repository {
+class FirebaseRepository implements AuthRepository {
   FirebaseAuth get _firebase => FirebaseAuth.instance;
+
+  @override
+  bool get isLogged => _firebase.currentUser != null;
+
+  @override
+  User? get currentUser => _firebase.currentUser;
+
+  @override
+  Future<void> signOut() async {
+    await _firebase.signOut();
+  }
+
   @override
   Future<UserModel> login(String email, String password) async {
     try {

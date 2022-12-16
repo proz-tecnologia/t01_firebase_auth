@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:t01_firebase_auth/features/sign_in/sign_in_controller.dart';
 import 'package:t01_firebase_auth/features/sign_in/sign_in_repository.dart';
 import 'package:t01_firebase_auth/features/sign_in/sign_in_state.dart';
+import 'package:t01_firebase_auth/shared/injection.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -11,7 +12,7 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final controller = SignInController(FirebaseRepository());
+  final controller = SignInController(getIt.get<AuthRepository>());
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
