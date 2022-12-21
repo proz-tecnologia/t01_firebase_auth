@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:t01_firebase_auth/features/home/model/todo.dart';
 
@@ -18,5 +20,19 @@ class HomeFirebaseRepository implements HomeRepository {
     // });
     final todoList = List<TodoModel>.from(result.docs.map((doc) => TodoModel.fromMap(doc.id, doc.data())));
     return todoList;
+  }
+
+  @override
+  Future<bool> deleteTodo(String todoId) async {
+    try {
+      final todo = _firestore.doc("todoList/$todoId");
+      if (todo.id.isNotEmpty) {
+        await todo.delete();
+      }
+      return true;
+    } catch (e, stackTrace) {
+      log("Nao conseguiu deletar", error: e, stackTrace: stackTrace);
+      return false;
+    }
   }
 }

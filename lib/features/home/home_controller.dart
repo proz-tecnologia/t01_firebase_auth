@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:t01_firebase_auth/features/home/home_state.dart';
 import 'package:t01_firebase_auth/features/sign_in/sign_in_repository.dart';
@@ -24,6 +26,19 @@ class HomeController {
       notifier.value = HomeSuccessState(result);
     } catch (e) {
       notifier.value = HomeErrorState();
+    }
+  }
+
+  Future<void> deleteTodo(String id) async {
+    try {
+      final result = await _homeRepository.deleteTodo(id);
+      if (result) {
+        final todoList = (state as HomeSuccessState).todoList;
+        todoList.removeWhere((todo) => todo.id == id);
+        notifier.value = HomeSuccessState(todoList);
+      }
+    } catch (e) {
+      log("Nao deu pra deletar");
     }
   }
 }

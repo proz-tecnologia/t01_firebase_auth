@@ -7,11 +7,17 @@ class AddTodoRepository {
   Future<bool> addTodo(TodoModel todoModel) async {
     try {
       final result = await _firestore.collection('todoList').add(todoModel.toMap());
-      //Update de um doc
-      //await _firestore.collection('todoList').doc(result.id).set(todoModel.toMap());
       return result.id.isNotEmpty;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<void> updateTodo(TodoModel todoModel) async {
+    try {
+      await _firestore.collection('todoList').doc(todoModel.id).set(todoModel.toMap());
+    } catch (e) {
+      rethrow;
     }
   }
 }

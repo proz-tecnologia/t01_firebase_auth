@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:t01_firebase_auth/features/home/model/todo.dart';
 import 'package:t01_firebase_auth/features/sign_in/sign_in_repository.dart';
 import 'package:t01_firebase_auth/features/todo/add_todo_controller.dart';
 import 'package:t01_firebase_auth/shared/injection.dart';
@@ -7,7 +8,16 @@ import 'add_todo_repository.dart';
 import 'add_todo_state.dart';
 
 class AddTodoPage extends StatefulWidget {
-  const AddTodoPage({Key? key}) : super(key: key);
+  final TodoModel? todo;
+  final String pageTitle;
+  final String? buttonTitle;
+
+  const AddTodoPage({
+    Key? key,
+    required this.pageTitle,
+    this.todo,
+    this.buttonTitle,
+  }) : super(key: key);
 
   @override
   State<AddTodoPage> createState() => _AddTodoPageState();
@@ -20,12 +30,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
   );
   final titleController = TextEditingController();
   final contentController = TextEditingController();
-  
+
   @override
   void initState() {
     super.initState();
-    controller.notifier.addListener(() { 
-      if(controller.state is AddTodoSuccessState){
+    titleController.text = widget.todo?.title ?? '';
+    contentController.text = widget.todo?.content ?? '';
+    controller.notifier.addListener(() {
+      if (controller.state is AddTodoSuccessState) {
         Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
       }
     });
@@ -35,7 +47,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Todo'),
+        title: Text(widget.pageTitle),
       ),
       body: Form(
         child: Padding(
@@ -52,9 +64,13 @@ class _AddTodoPageState extends State<AddTodoPage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
-                  await controller.addTodo(titleController.text, contentController.text);
+                  if (widget.todo == null) {
+                    await controller.addTodo(titleController.text, contentController.text);
+                  } else {
+                    await controller.updateTodo(widget.todo!, titleController.text, contentController.text);
+                  }
                 },
-                child: const Text('Cadastrar'),
+                child: Text(widget.buttonTitle ?? 'Cadastrar'),
               ),
             ],
           ),

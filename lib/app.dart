@@ -16,7 +16,14 @@ class MyApp extends StatelessWidget {
       home: const SplashPage(),
       routes: {
         '/home': (_) => const MyHomePage(title: 'Kaio legal'),
-        '/add-todo': (_) => const AddTodoPage(),
+        '/add-todo': (context) {
+          final args = (ModalRoute.of(context)?.settings.arguments ?? {}) as Map;
+          return AddTodoPage(
+            pageTitle: args['pageTitle'] ?? 'Kaio do albergue',
+            todo: args['todo'],
+            buttonTitle: args['buttonTitle'],
+          );
+        },
         '/signin': (_) => const SignInPage(),
       },
     );

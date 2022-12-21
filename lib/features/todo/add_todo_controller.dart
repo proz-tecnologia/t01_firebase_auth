@@ -9,9 +9,11 @@ class AddTodoController {
   final AuthRepository _authRepository;
   final AddTodoRepository _addTodoRepository;
   final notifier = ValueNotifier<AddTodoState>(AddTodoInitialState());
+
   AddTodoState get state => notifier.value;
 
   AddTodoController(this._authRepository, this._addTodoRepository);
+
   Future<void> addTodo(String title, String content) async {
     try {
       final userId = _authRepository.currentUser?.uid ?? '';
@@ -25,6 +27,22 @@ class AddTodoController {
         notifier.value = AddTodoSuccessState();
       }
       throw Exception();
+    } catch (e) {
+      notifier.value = AddTodoErrorState();
+    }
+  }
+
+  Future<void> updateTodo(TodoModel todoModel, String title, String content) async {
+    try {
+      final todoModelRequest = TodoModel(
+        id: todoModel.id,
+        userId: todoModel.userId,
+        date: todoModel.date,
+        title: title,
+        content: content,
+      );
+      await _addTodoRepository.updateTodo(todoModelRequest);
+      notifier.value = AddTodoSuccessState();
     } catch (e) {
       notifier.value = AddTodoErrorState();
     }
