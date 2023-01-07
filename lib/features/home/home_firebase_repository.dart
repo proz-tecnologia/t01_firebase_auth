@@ -24,6 +24,7 @@ class HomeFirebaseRepository implements HomeRepository {
 
   @override
   Future<bool> deleteTodo(String todoId) async {
+    //throw Exception('teste error');
     try {
       final todo = _firestore.doc("todoList/$todoId");
       if (todo.id.isNotEmpty) {

@@ -16,7 +16,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controller = HomeController(getIt.get<AuthRepository>(), HomeFirebaseRepository());
-
+  String? title;
   @override
   void initState() {
     super.initState();
@@ -104,62 +104,15 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: Colors.white,
                         ),
                       ),
-                      // onDismissed: (direction) {
-                      //   if (direction == DismissDirection.startToEnd) {
-                      //     Navigator.of(context).pushNamed(
-                      //       '/add-todo',
-                      //       arguments: {
-                      //         'pageTitle': 'Update todo',
-                      //         'todoTitle': todo.title,
-                      //         'todoContent': todo.content,
-                      //       },
-                      //     );
-                      //   }
-                      // },
                       child: ListTile(
                         title: Text(todo.title),
                         subtitle: Text(todo.content),
                       ),
                     );
-                    // ExpansionTile(
-                    //   expandedAlignment: Alignment.centerLeft,
-                    //   title: Row(
-                    //     children: [
-                    //       Text(todo.title),
-                    //       const SizedBox(width: 8),
-                    //       Text(todo.date.formattedDate),
-                    //     ],
-                    //   ),
-                    //   children: [
-                    //     Row(
-                    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //       children: [
-                    //         Padding(
-                    //           padding: const EdgeInsets.all(16),
-                    //           child: Text(todo.content),
-                    //         ),
-                    //         const Spacer(),
-                    //         IconButton(
-                    //           onPressed: () {},
-                    //           icon: const Icon(Icons.edit),
-                    //           splashRadius: 24,
-                    //         ),
-                    //         IconButton(
-                    //           onPressed: () {
-                    //             // if (todo.id != null) {
-                    //             //   controller.deleteTodo(todo.id!);
-                    //             // }
-                    //           },
-                    //           icon: const Icon(Icons.delete),
-                    //         ),
-                    //       ],
-                    //     )
-                    //   ],
-                    // );
                   },
                 ),
               );
-            }
+            } //
             return const SizedBox.shrink();
           }),
       floatingActionButton: FloatingActionButton(
