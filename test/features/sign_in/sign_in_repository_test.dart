@@ -14,23 +14,26 @@ void main() {
   //arrange
   late FirebaseRepository repository;
   late FirebaseMock firebaseAuth;
-  final userCredential = UserCredentialMock();
-  final user = UserMock();
+  late UserCredentialMock userCredential;
+  late UserMock user;
 
-  setUpAll(() {
+  setUp(() {
     firebaseAuth = FirebaseMock();
     repository = FirebaseRepository(firebaseAuth);
-    when(
-      () => firebaseAuth.signInWithEmailAndPassword(
-        email: any(named: 'email'),
-        password: any(named: 'password'),
-      ),
-    ).thenAnswer((invocation) async => userCredential);
-    when((() => userCredential.user)).thenReturn(user);
+    userCredential = UserCredentialMock();
+    user = UserMock();
   });
 
-  group('method login', () {
+  group('login', () {
+    //sucesso, se logou e devolveu um UserModel
     test('caso de sucesso', () async {
+      when(
+        () => firebaseAuth.signInWithEmailAndPassword(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((invocation) async => userCredential);
+      when((() => userCredential.user)).thenReturn(user);
       //act
       final result = await repository.login('jessica@email.com', '123456');
       //assert
@@ -39,9 +42,31 @@ void main() {
       //result.email == 'jessica@email.com'
       expect(result.email, 'jessica@email.com');
     });
-  });
 
-  //sucesso, se logou e devolveu um UserModel
-  //erro nao existe o usuario
-  //erro conexao com firebase
+    //erro nao existe o usuario
+    test('se nao vier user, throw exception', () async {
+      when(
+        () => firebaseAuth.signInWithEmailAndPassword(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer((invocation) async => userCredential);
+      //act
+      //assert
+      expect(() => repository.login('jessica@email.com', '123456'), throwsA(isA<Exception>()));
+    });
+
+    //erro conexao com firebase
+    test('se nao tiver conexão, throw exception', () async {
+      when(
+        () => firebaseAuth.signInWithEmailAndPassword(
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      ).thenThrow(Exception());
+      //act
+      //assert
+      expect(() => repository.login('jessica@email.com', '123456'), throwsException);
+    });
+  });
 }
