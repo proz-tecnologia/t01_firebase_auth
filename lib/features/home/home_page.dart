@@ -15,14 +15,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = HomeController(getIt.get<AuthRepository>(), HomeFirebaseRepository());
+  final controller =
+      HomeController(getIt.get<AuthRepository>(), HomeFirebaseRepository());
   String? title;
   @override
   void initState() {
     super.initState();
     controller.notifier.addListener(() {
       if (controller.state is HomeLogoutState) {
-        Navigator.of(context).pushNamedAndRemoveUntil('/signin', (route) => false);
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/signin', (route) => false);
       }
     });
     controller.getTodo();
