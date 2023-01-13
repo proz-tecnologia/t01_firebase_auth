@@ -25,6 +25,10 @@ class HomeController {
       final userId = _repository.currentUser?.uid;
       final result = await _homeRepository.getTodo(userId ?? '');
       await analytics.logEvent(name: 'getTodo', parameters: {'userId': userId});
+      if (result.isEmpty) {
+        notifier.value = HomeEmptyState();
+        return;
+      }
       notifier.value = HomeSuccessState(result);
     } catch (e) {
       notifier.value = HomeErrorState();

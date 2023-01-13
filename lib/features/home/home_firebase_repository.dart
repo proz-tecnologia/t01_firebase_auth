@@ -6,7 +6,10 @@ import 'package:t01_firebase_auth/features/home/model/todo.dart';
 import 'home_repository.dart';
 
 class HomeFirebaseRepository implements HomeRepository {
-  final _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore;
+
+  HomeFirebaseRepository(this._firestore);
+  //final _firestore = FirebaseFirestore.instance;
 
   @override
   Future<List<TodoModel>> getTodo(String userId) async {

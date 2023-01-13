@@ -15,3 +15,5 @@ class HomeSuccessState implements HomeState {
 }
 
 class HomeErrorState implements HomeState {}
+
+class HomeEmptyState implements HomeState {}
