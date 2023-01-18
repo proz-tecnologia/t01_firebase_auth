@@ -1,10 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:t01_firebase_auth/features/home/home_controller.dart';
-import 'package:t01_firebase_auth/features/home/home_firebase_repository.dart';
 import 'package:t01_firebase_auth/features/home/home_state.dart';
-import 'package:t01_firebase_auth/features/sign_in/sign_in_repository.dart';
 import 'package:t01_firebase_auth/shared/injection.dart';
+
+import 'widgets/custom_dismissible.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -16,7 +15,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = HomeController(getIt.get<AuthRepository>(), HomeFirebaseRepository(FirebaseFirestore.instance));
+  //injetamos o controller no getIt pra conseguir mockar no teste
+  final controller = getIt.get<HomeController>();
   String? title;
   @override
   void initState() {
@@ -77,48 +77,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: state.todoList.length,
                   itemBuilder: (context, index) {
                     final todo = state.todoList[index];
-                    return Dismissible(
-                      confirmDismiss: (direction) async {
-                        if (direction == DismissDirection.startToEnd) {
-                          await Navigator.of(context).pushNamed(
-                            '/add-todo',
-                            arguments: {
-                              'pageTitle': 'Update todo',
-                              'todo': todo,
-                              'buttonTitle': 'Update',
-                            },
-                          );
-                          return false;
-                        } else {
-                          if (todo.id != null) {
-                            await controller.deleteTodo(todo.id!);
-                          }
-                          return true;
-                        }
-                      },
-                      key: UniqueKey(),
-                      background: Container(
-                        padding: const EdgeInsets.only(left: 8),
-                        alignment: Alignment.centerLeft,
-                        color: Colors.green,
-                        child: const Icon(
-                          Icons.edit,
-                          color: Colors.white,
-                        ),
-                      ),
-                      secondaryBackground: Container(
-                        padding: const EdgeInsets.only(right: 8),
-                        alignment: Alignment.centerRight,
-                        color: Colors.red,
-                        child: const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                        ),
-                      ),
-                      child: ListTile(
-                        title: Text(todo.title),
-                        subtitle: Text(todo.content),
-                      ),
+                    return CustomDismissible(
+                      todoModel: todo,
+                      deleteTodo: (value) => controller.deleteTodo(value),
                     );
                   },
                 ),
